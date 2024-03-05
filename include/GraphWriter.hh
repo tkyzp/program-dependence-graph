@@ -278,10 +278,11 @@ namespace llvm
 
 namespace pdg
 {
-  struct ProgramDependencyPrinter : public llvm::DOTGraphTraitsPrinter<ProgramDependencyGraph, false>
+  // TODO:DOTGraphTraitsPrinter 这个模板类的定义发生改变
+  struct ProgramDependencyPrinter : public llvm::DOTGraphTraitsPrinterWrapperPass<ProgramDependencyGraph, false>
   {
     static char ID;
-    ProgramDependencyPrinter() : llvm::DOTGraphTraitsPrinter<ProgramDependencyGraph, false>("pdgragh", ID) {}
+    ProgramDependencyPrinter() : llvm::DOTGraphTraitsPrinterWrapperPass<ProgramDependencyGraph, false>("pdgragh", ID) {}
   };
 
 } // namespace pdg

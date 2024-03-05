@@ -1,4 +1,5 @@
 #include "DebugInfoUtils.hh"
+#include "llvm/BinaryFormat/Dwarf.h"
 
 using namespace llvm;
 
@@ -276,5 +277,5 @@ std::set<DIType *> pdg::dbgutils::computeContainedStructTypes(DIType &dt)
       }
     }
   }
-  return contained_struct_di_types;
+  return  ;
 }

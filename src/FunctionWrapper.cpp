@@ -38,6 +38,7 @@ void pdg::FunctionWrapper::buildFormalTreeForArgs()
 {
   for (auto arg : _arg_list)
   {
+    // 找到这个参数对应的alloca指令
     DILocalVariable* di_local_var = getArgDILocalVar(*arg);
     AllocaInst* arg_alloca_inst = getArgAllocaInst(*arg);
     if (di_local_var == nullptr || arg_alloca_inst == nullptr)
@@ -48,6 +49,7 @@ void pdg::FunctionWrapper::buildFormalTreeForArgs()
     Tree *arg_formal_in_tree = new Tree(*arg);
     TreeNode *formal_in_root_node = new TreeNode(*_func, di_local_var->getType(), 0, nullptr, arg_formal_in_tree, GraphNodeType::PARAM_FORMALIN);
     formal_in_root_node->setDILocalVariable(*di_local_var);
+    // 找到那些使用了这个参数的内存地址的指令
     auto addr_taken_vars = pdgutils::computeAddrTakenVarsFromAlloc(*arg_alloca_inst);
     for (auto addr_taken_var : addr_taken_vars)
     {
@@ -77,6 +79,7 @@ void pdg::FunctionWrapper::buildFormalTreesForRetVal()
   Tree* ret_formal_in_tree = new Tree();
   DIType* func_ret_di_type = dbgutils::getFuncRetDIType(*_func);
   TreeNode* ret_formal_in_tree_root_node = new TreeNode(*_func, func_ret_di_type, 0, nullptr, ret_formal_in_tree, GraphNodeType::PARAM_FORMALIN);
+  // 所有的返回指令都有可能返回值
   for (auto ret_inst : _return_insts)
   {
     auto ret_val = ret_inst->getReturnValue();
@@ -121,7 +124,7 @@ AllocaInst *pdg::FunctionWrapper::getArgAllocaInst(Argument &arg)
       continue;
     if (di_local_var->getArg() == arg.getArgNo() + 1 && !di_local_var->getName().empty() && di_local_var->getScope()->getSubprogram() == _func->getSubprogram())
     {
-      if (AllocaInst* ai = dyn_cast<AllocaInst>(dbg_declare_inst->getVariableLocation()))
+      if (AllocaInst* ai = dyn_cast<AllocaInst>(dbg_declare_inst->getVariableLocationOp(0)))
         return ai;
     }
   }

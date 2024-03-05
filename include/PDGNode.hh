@@ -25,6 +25,7 @@ namespace pdg
       _node_type = node_type;
       _is_visited = false;
       _func = nullptr;
+      /*  MARK:fix di type */
       _node_di_type = nullptr;
     }
     Node(llvm::Value &v, GraphNodeType node_type)
@@ -36,6 +37,7 @@ namespace pdg
         _func = nullptr;
       _node_type = node_type;
       _is_visited = false;
+      /*  MARK:fix di type */
       _node_di_type = nullptr;
     }
     
@@ -50,6 +52,8 @@ namespace pdg
     void setFunc(llvm::Function &f) { _func = &f; }
     llvm::Value *getValue() { return _val; }
     llvm::DIType *getDIType() const { return _node_di_type; }
+
+    /*  MARK:fix di type */
     void setDIType(llvm::DIType &di_type) { _node_di_type = &di_type; }
     void addNeighbor(Node &neighbor, EdgeType edge_type);
     EdgeSet::iterator begin() { return _out_edge_set.begin(); }
@@ -71,6 +75,8 @@ namespace pdg
     EdgeSet _in_edge_set;
     EdgeSet _out_edge_set;
     GraphNodeType _node_type;
+    
+    /* MARK:fix di type */
     llvm::DIType *_node_di_type;
   };
 

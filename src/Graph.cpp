@@ -175,6 +175,7 @@ void pdg::ProgramGraph::build(Module &M)
         // handle indirect call
         auto ind_call_candidates = call_g.getIndirectCallCandidates(*ci, M);
         if (ind_call_candidates.size() > 0)
+        // MARK:这里好像偷懒了，对于间接调用，只取第一个候选者？
           called_func = *ind_call_candidates.begin();
       }
       if (!hasFuncWrapper(*called_func))
@@ -200,7 +201,7 @@ void pdg::ProgramGraph::bindDITypeToNodes(Module &M)
     // bind ditype to the top-level pointer (alloca)
     for (auto dbg_declare_inst : dbg_declare_insts)
     {
-      auto addr = dbg_declare_inst->getVariableLocation();
+      auto addr = dbg_declare_inst->getVariableLocationOp(0);
       Node *addr_node = getNode(*addr);
       if (!addr_node)
         continue;

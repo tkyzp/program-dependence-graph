@@ -58,6 +58,7 @@ namespace pdg
   public:
     typedef std::unordered_map<llvm::Function *, FunctionWrapper *> FuncWrapperMap;
     typedef std::unordered_map<llvm::CallInst *, CallWrapper *> CallWrapperMap;
+    /*  MARK:fix di type */
     typedef std::unordered_map<Node *, llvm::DIType *> NodeDIMap;
 
     ProgramGraph() = default;
@@ -73,16 +74,20 @@ namespace pdg
 
     FuncWrapperMap &getFuncWrapperMap() { return _func_wrapper_map; }
     CallWrapperMap &getCallWrapperMap() { return _call_wrapper_map; }
+    /*  MARK:fix di type */
     NodeDIMap &getNodeDIMap() { return _node_di_type_map; }
     void build(llvm::Module &M) override;
     bool hasFuncWrapper(llvm::Function &F) { return _func_wrapper_map.find(&F) != _func_wrapper_map.end(); }
     bool hasCallWrapper(llvm::CallInst &ci) { return _call_wrapper_map.find(&ci) != _call_wrapper_map.end(); }
     FunctionWrapper *getFuncWrapper(llvm::Function &F) { return _func_wrapper_map[&F]; }
     CallWrapper *getCallWrapper(llvm::CallInst &ci) { return _call_wrapper_map[&ci]; }
+    /*  MARK:fix di type */
     void bindDITypeToNodes(llvm::Module &M);
     llvm::DIType *computeNodeDIType(Node &n);
     void addTreeNodesToGraph(Tree &tree);
     void addFormalTreeNodesToGraph(FunctionWrapper &func_w);
+    
+    /* MARK:ignore Annotation */
     bool isAnnotationCallInst(llvm::Instruction &inst);
     void buildGlobalAnnotationNodes(llvm::Module &M);
     void dumpDataDepGraph(llvm::Function &F);
@@ -90,6 +95,7 @@ namespace pdg
   private:
     FuncWrapperMap _func_wrapper_map;
     CallWrapperMap _call_wrapper_map;
+    /*  MARK:fix di type */
     NodeDIMap _node_di_type_map;
   };
 } // namespace pdg
